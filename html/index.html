@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.0/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div id='root'></div>
+    <script type='text/babel'>
+
+
+    class App extends React.Component {
+        constructor(){
+            super();
+            this.state = {
+                things:[],
+            };
+        }
+
+        async componentDidMount(){
+            const thing = await axios.get('/api/thing')
+            this.setState({
+                things:thing.data,
+
+            })
+        }
+
+       async create(){
+            const response = await axios.get('/api/thing')
+            const task = response.data
+            this.setState({ tasks });      
+        }
+        render() {
+            return (
+                <div>
+                    <h1>TODO LIST!</h1>
+                    <form>
+                        <label>
+                            <input type="text" name="name" />
+                        </label>
+                            <button onClick={this.create}>SUBMIT</button>
+                     </form>
+                    <ul>
+                    {this.state.things.map((todo)=>{
+                        return( 
+                            <li>
+                             {todo.name}
+                            </li>   
+                            )})}   
+                    </ul>          
+                </div>     
+                    )}
+    }
+    const root = document.querySelector('#root');
+      ReactDOM.render(<App />, root);
+</script>
+
+</body>
+</html>
