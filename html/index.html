@@ -16,7 +16,11 @@
             super();
             this.state = {
                 things:[],
+                thing:'',
             };
+        this.create = this.create.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+
         }
 
         async componentDidMount(){
@@ -27,20 +31,27 @@
             })
         }
 
-       async create(){
-            const response = await axios.get('/api/thing')
-            const task = response.data
-            this.setState({ tasks });      
+        handleChange(event){
+            this.setState({thing:event.target.value})
+        }
+
+       async create(e){
+           e.preventDefault()     
+            const thing = this.state.thing
+            console.log(thing)
+            const response = await axios.post('/api/thing',`name=${thing}`)
+            const things = response.data
+            this.setState({ things });      
         }
         render() {
             return (
                 <div>
                     <h1>TODO LIST!</h1>
-                    <form>
+                    <form onSubmit={this.create}>
                         <label>
-                            <input type="text" name="name" />
+                            <input type="text"  name="name" onChange={this.handleChange} />
                         </label>
-                            <button onClick={this.create}>SUBMIT</button>
+                            <button type= 'submit'>SUBMIT</button>
                      </form>
                     <ul>
                     {this.state.things.map((todo)=>{

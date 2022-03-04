@@ -1,9 +1,9 @@
 const express = require("express");
 const { Thing, data } = require("./db");
 const path = require("path");
-
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
 app.get("/", async (req, res, next) => {
   try {
     res.sendFile(path.join(__dirname, "./html/index.html"));
@@ -22,8 +22,10 @@ app.get("/api/thing", async (req, res, next) => {
 
 app.post("/api/thing", async (req, res, next) => {
   try {
+    console.log(req.body);
     await Thing.create({ name: req.body.name });
-    res.sendStatus(201);
+    const things = await Thing.findAll();
+    res.status(201).send(things);
   } catch (ex) {
     next(ex);
   }
