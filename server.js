@@ -22,7 +22,6 @@ app.get("/api/thing", async (req, res, next) => {
 
 app.post("/api/thing", async (req, res, next) => {
   try {
-    console.log(req.body);
     await Thing.create({ name: req.body.name });
     const things = await Thing.findAll();
     res.status(201).send(things);

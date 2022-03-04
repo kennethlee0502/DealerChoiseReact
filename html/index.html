@@ -1,7 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <style>
+
+
+body {
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  text-align: center;
+  background-color: #005644;
+  height: 100%;
+  padding: 50px;
+  color: #ffafa2;
+}
+
+.todolist {
+  margin: auto;
+  max-width: 425px;
+}
+
+h1 {
+  text-align: center;
+  color: #ffafa2;
+}
+
+.form {
+  align-items: center;
+}
+
+.input {
+  background-color: transparent;
+  border: 2px solid #ffafa2;
+  color: #ffafa2;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 22px;
+  font-family: inherit;
+}
+
+.submit {
+  background-color: transparent;
+  border: 2px solid #ffafa2;
+  color: #ffafa2;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 22px;
+  margin-left: 8px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background-color: #ffafa2;
+  border: 2px solid #ffafa2;
+  color: #005644;
+  padding: 10px;
+}
+
+.todo {
+  display:flex;
+  justify-content:center;
+  text-align: center;
+  margin-top: 8px;
+  background-color: transparent;
+  padding: 10px;
+  font-size: 30px;
+  font-family: inherit;
+}
+
+
+.todo-delete {
+  float: right;
+  padding: 0px 30px;
+  cursor: pointer;
+}
+
+.todo-delete:hover {
+  background-color: #ffafa21c;
+  border-radius: 6px;
+}
+    </style>    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.0/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -31,14 +108,20 @@
             })
         }
 
+        async destroy(taskToDelete){
+        await axios.delete(`/api/thing/${taskToDelete.id}`);
+        const things = this.state.things.filter(thing => thing.id !== taskToDelete.id);
+        this.setState({ things });
+  }
+
         handleChange(event){
             this.setState({thing:event.target.value})
         }
+        
 
        async create(e){
            e.preventDefault()     
             const thing = this.state.thing
-            console.log(thing)
             const response = await axios.post('/api/thing',`name=${thing}`)
             const things = response.data
             this.setState({ things });      
@@ -46,20 +129,27 @@
         render() {
             return (
                 <div>
-                    <h1>TODO LIST!</h1>
+                    <h1>KENNETH'S TODO LIST!</h1>
+                    <div className="form">
                     <form onSubmit={this.create}>
                         <label>
-                            <input type="text"  name="name" onChange={this.handleChange} />
+                            <input type="text"  name="name"  className="input"placeholder={"Type here..."} onChange={this.handleChange} />
                         </label>
-                            <button type= 'submit'>SUBMIT</button>
+                            <button type= 'submit' className="submit">SUBMIT</button>
                      </form>
+                     </div>
                     <ul>
-                    {this.state.things.map((todo)=>{
+                        <div className="todo">
+                        <span className="todo-text">
+
+                    {this.state.things.map((thing)=>{
                         return( 
-                            <li>
-                             {todo.name}
-                            </li>   
-                            )})}   
+                <li key={thing.id}>{ thing.name } <span onClick={ ()=> this.destroy(thing)} className="todo-delete">x</span></li>
+   
+              );
+            })
+          }         </span>
+    </div>
                     </ul>          
                 </div>     
                     )}
