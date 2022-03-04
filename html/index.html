@@ -104,6 +104,7 @@ h1 {
             const thing = await axios.get('/api/thing')
             this.setState({
                 things:thing.data,
+                empty:''
 
             })
         }
@@ -118,18 +119,20 @@ h1 {
             this.setState({thing:event.target.value})
         }
         
+        
 
        async create(e){
            e.preventDefault()     
             const thing = this.state.thing
             const response = await axios.post('/api/thing',`name=${thing}`)
             const things = response.data
-            this.setState({ things });      
+            this.setState({ things }); 
+            e.target.reset();     
         }
         render() {
             return (
                 <div>
-                    <h1>KENNETH'S TODO LIST!</h1>
+                    <h1>KENNETH'S TO-DO LIST!</h1>
                     <div className="form">
                     <form onSubmit={this.create}>
                         <label>
